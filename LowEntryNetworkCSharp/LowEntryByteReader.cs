@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
+using System.Linq;
 using System.Text;
 
 namespace LowEntryNetworkCSharp
@@ -30,8 +32,20 @@ namespace LowEntryNetworkCSharp
             this.Bytes = LowEntryExtendedStandardLibrary.BytesSubArray(Bytes, Index, Length);
         }
 
+        public static byte[] ReversedSubArray(byte[] b, int start, int length)
+        {
+            byte[] ret = b.AsSpan(start, length).ToArray();
+            return ret.Reverse().ToArray();
+        }
+
         public bool IsAtEnd => Position >= Bytes.Length;
 
+        /// <summary>
+        /// Get the current position, then increas Position by Increasment.
+        /// Return the position from before Incresement was added.
+        /// </summary>
+        /// <param name="Increasement"></param>
+        /// <returns></returns>
         public Int32 GetAndIncreasePosition(Int32 Increasement)
         {
             Int32 Pos = Position;
@@ -98,11 +112,14 @@ namespace LowEntryNetworkCSharp
 
         public Int32 GetInteger()
         {
-            Int32 Pos = GetAndIncreasePosition(4);
-            if (Bytes.Length <= Pos)
+            int sz = 4;
+            Int32 Pos = GetAndIncreasePosition(sz);
+            if (Bytes.Length <= Pos + sz)
             {
                 return 0;
             }
+            if (BitConverter.IsLittleEndian)
+                return BitConverter.ToInt32(ReversedSubArray(Bytes, Pos, sz));
             return BitConverter.ToInt32(Bytes, Pos);
         }
 
@@ -114,7 +131,7 @@ namespace LowEntryNetworkCSharp
                 return 0;
             }
             byte B = Bytes[Pos];
-            if (((B >> 7) & 1) == 0)
+            if ((B & 0x080) == 0)
             {
                 return B;
             }
@@ -215,31 +232,40 @@ namespace LowEntryNetworkCSharp
 
         public UInt64 GetLongBytes()
         {
-            Int32 Pos = GetAndIncreasePosition(8);
-            if (Bytes.Length <= Pos)
+            int sz = 8;
+            Int32 Pos = GetAndIncreasePosition(sz);
+            if (Bytes.Length <= Pos + sz)
             {
                 return 0;
             }
+            if (BitConverter.IsLittleEndian)
+                return BitConverter.ToUInt64(ReversedSubArray(Bytes, Pos, sz), 0);
             return BitConverter.ToUInt64(Bytes, Pos);
         }
 
         public float GetFloat()
         {
-            Int32 Pos = GetAndIncreasePosition(4);
-            if (Bytes.Length <= Pos)
+            int sz = 4;
+            Int32 Pos = GetAndIncreasePosition(sz);
+            if (Bytes.Length <= Pos + sz)
             {
                 return 0;
             }
+            if (BitConverter.IsLittleEndian)
+                return BitConverter.ToSingle(ReversedSubArray(Bytes, Pos, sz));
             return BitConverter.ToSingle(Bytes, Pos);
         }
 
         public double GetDoubleBytes()
         {
-            Int32 Pos = GetAndIncreasePosition(8);
-            if (Bytes.Length <= Pos)
+            int sz = 8;
+            Int32 Pos = GetAndIncreasePosition(sz);
+            if (Bytes.Length <= Pos + sz)
             {
                 return 0.0;
             }
+            if (BitConverter.IsLittleEndian)
+                return BitConverter.ToDouble(ReversedSubArray(Bytes, Pos, sz), 0);
             return BitConverter.ToDouble(Bytes, Pos);
         }
 

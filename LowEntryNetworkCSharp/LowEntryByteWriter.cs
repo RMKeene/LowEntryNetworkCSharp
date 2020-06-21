@@ -107,11 +107,7 @@ namespace LowEntryNetworkCSharp
 
         public void AddPositiveInteger2(Int32 Value)
         {
-            if (Value <= 0)
-            {
-                AddRawByte(0);
-            }
-            else if (Value < 32768)
+            if (Value < 32768)
             {
                 AddRawByte((byte)(Value >> 8));
                 AddRawByte((byte)(Value));
@@ -127,11 +123,7 @@ namespace LowEntryNetworkCSharp
 
         public void AddPositiveInteger3(Int32 Value)
         {
-            if (Value <= 0)
-            {
-                AddRawByte(0);
-            }
-            else if (Value < 8388608)
+            if (Value < 8388608)
             {
                 AddRawByte((byte)(Value >> 16));
                 AddRawByte((byte)(Value >> 8));
@@ -177,6 +169,7 @@ namespace LowEntryNetworkCSharp
             }
             AddRawBytes(BitConverter.GetBytes(Value));
         }
+
         public void AddBoolean(bool Value)
         {
             if (Value)
@@ -212,14 +205,16 @@ namespace LowEntryNetworkCSharp
             AddUinteger(Value.Length);
             foreach (Int32 V in Value)
             {
+                System.Diagnostics.Debug.Assert(V >= 0);
                 AddPositiveInteger1(V);
             }
         }
         public void AddPositiveInteger2Array(Int32[] Value)
         {
-            AddUinteger(Value.Length);
+             AddUinteger(Value.Length);
             foreach (Int32 V in Value)
             {
+                System.Diagnostics.Debug.Assert(V >= 0);
                 AddPositiveInteger2(V);
             }
         }
@@ -228,6 +223,7 @@ namespace LowEntryNetworkCSharp
             AddUinteger(Value.Length);
             foreach (Int32 V in Value)
             {
+                System.Diagnostics.Debug.Assert(V >= 0);
                 AddPositiveInteger3(V);
             }
         }
