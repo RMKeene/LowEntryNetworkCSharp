@@ -64,11 +64,15 @@ namespace LowEntryNetworkCSharpTest
             bw.AddPositiveInteger1(38000);
             bw.AddPositiveInteger1(42424242);
             bw.AddPositiveInteger1Array(G);
+            bw.AddPositiveInteger2(-42);
+            bw.AddPositiveInteger2(0);
             bw.AddPositiveInteger2(42);
             bw.AddPositiveInteger2(1025);
             bw.AddPositiveInteger2(38000);
             bw.AddPositiveInteger2(42424242);
             bw.AddPositiveInteger2Array(G);
+            bw.AddPositiveInteger3(-100);
+            bw.AddPositiveInteger3(0);
             bw.AddPositiveInteger3(42);
             bw.AddPositiveInteger3(38000);
             bw.AddPositiveInteger3(8388609);
@@ -78,9 +82,22 @@ namespace LowEntryNetworkCSharpTest
             bw.AddUinteger(1);
 
             s = BitConverter.ToString(bw.buf.ToArray());
-            //                   T  F 6 100111     6                   [       3.1415926      ] 5 [       3.333          ,     1.111             ,       2.222           ,     5.555             ,           -7.777      ] [ 6.6666f ] 5 [ 3.333f   , 1.111f    , 2.222f    , 5.555f    , -7.777f   ]-0x1234ABCD|       1   |      0    |     -1    |             9,          8,          7,          6,          5,          4,          3,          2,          1,          0,        200,       3800,    8389000,  0xDEADBEEF (64bit)   ,   0xCAFEBABEDEADBEEF  ,                      100 ,                   101 ,                 102   ,                 103   ,42, 0,  42424242 ,    9, 8, 7, 6, 5, 4, 3, 2, 1, 0,        200,       3800,    8389000, etc...
-            Assert.AreEqual(s, "01-00-06-9C-DE-AD-06-01-02-03-04-05-06-40-09-21-FB-4D-12-D8-4A-05-40-0A-A9-FB-E7-6C-8B-44-3F-F1-C6-A7-EF-9D-B2-2D-40-01-C6-A7-EF-9D-B2-2D-40-16-38-51-EB-85-1E-B8-C0-1F-1B-A5-E3-53-F7-CF-40-D5-54-CA-05-40-55-4F-DF-3F-8E-35-3F-40-0E-35-3F-40-B1-C2-8F-C0-F8-DD-2F-ED-CB-54-33-00-00-00-01-00-00-00-00-FF-FF-FF-FF-0D-00-00-00-09-00-00-00-08-00-00-00-07-00-00-00-06-00-00-00-05-00-00-00-04-00-00-00-03-00-00-00-02-00-00-00-01-00-00-00-00-00-00-00-C8-00-00-94-70-00-80-01-88-00-00-00-00-DE-AD-BE-EF-CA-FE-BA-BE-DE-AD-BE-EF-04-00-00-00-00-00-00-00-64-00-00-00-00-00-00-00-65-00-00-00-00-00-00-00-66-00-00-00-00-00-00-00-67-2A-00-80-00-94-70-82-87-57-B2-0D-09-08-07-06-05-04-03-02-01-00-80-00-00-C8-80-00-94-70-80-80-01-88-00-2A-04-01-80-00-94-70-82-87-57-B2-0D-00-09-00-08-00-07-00-06-00-05-00-04-00-03-00-02-00-01-00-00-00-C8-80-00-94-70-80-80-01-88-00-00-2A-00-94-70-80-80-00-01-82-87-57-B2-0D-00-00-09-00-00-08-00-00-07-00-00-06-00-00-05-00-00-04-00-00-03-00-00-02-00-00-01-00-00-00-00-00-C8-00-94-70-80-80-01-88-04-03-4F-6E-65-03-54-77-6F-05-54-68-72-65-65-04-46-6F-75-72-01");
-            //                            0xDEAD      1, 2, 3, 4, 5, 6                                                                                                                                                                                                                                                                               13                                                                                                                                                                                                              4                                                                                               flag bit 0x80       11                    flag bit 0x80
+            //                   T  F 6 100111     6                   [       3.1415926      ] 5 [       3.333          ,     1.111             ,
+            Assert.AreEqual(s, "01-00-06-9C-DE-AD-06-01-02-03-04-05-06-40-09-21-FB-4D-12-D8-4A-05-40-0A-A9-FB-E7-6C-8B-44-3F-F1-C6-A7-EF-9D-B2-2D-" +
+                // 2.222           ,     5.555             ,           -7.777      ] [ 6.6666f ]      5 [ 3.333f   , 1.111f    , 2.222f    , 5.555f    , -7.777f   ]-0x1234ABCD|
+                "40-01-C6-A7-EF-9D-B2-2D-40-16-38-51-EB-85-1E-B8-C0-1F-1B-A5-E3-53-F7-CF-40-D5-54-CA-05-40-55-4F-DF-3F-8E-35-3F-40-0E-35-3F-40-B1-C2-8F-C0-F8-DD-2F-ED-CB-54-33-" +
+                // 1        |      0    |     -1    |             9,          8,          7,          6,          5,          4,          3,          2,          1,          0,
+                "00-00-00-01-00-00-00-00-FF-FF-FF-FF-0D-00-00-00-09-00-00-00-08-00-00-00-07-00-00-00-06-00-00-00-05-00-00-00-04-00-00-00-03-00-00-00-02-00-00-00-01-00-00-00-00-" +
+                // 200,       3800,    8389000      ,  0xDEADBEEF (64bit)   ,   0xCAFEBABEDEADBEEF  ,
+                "00-00-00-C8-00-00-94-70-00-80-01-88-00-00-00-00-DE-AD-BE-EF-CA-FE-BA-BE-DE-AD-BE-EF-" +
+                //4,                   100 ,                   101 ,                 102   ,                 103   ,
+                "04-00-00-00-00-00-00-00-64-00-00-00-00-00-00-00-65-00-00-00-00-00-00-00-66-00-00-00-00-00-00-00-67-" +
+                //42,0,  42424242 ,        size10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0,        200,       3800,    8389000, etc...
+                "2A-00-80-00-94-70-82-87-57-B2-0D-09-08-07-06-05-04-03-02-01-00-80-00-00-C8-80-00-94-70-80-80-01-88-00-00-00-" + 
+                "00-00-2A-04-01-80-00-94-70-82-87-57-B2-0D-00-09-00-08-00-07-00-06-00-05-00-04-00-03-00-02-00-01-00-00-00-C8-" +
+                "80-00-94-70-80-80-01-88-00-00-00-00-00-00-00-00-2A-00-94-70-80-80-00-01-82-87-57-B2-0D-00-00-09-00-00-08-00-" +
+                "00-07-00-00-06-00-00-05-00-00-04-00-00-03-00-00-02-00-00-01-00-00-00-00-00-C8-00-94-70-80-80-01-88-04-03-4F-" +
+                "6E-65-03-54-77-6F-05-54-68-72-65-65-04-46-6F-75-72-01");
 
             br = new LowEntryByteReader(bw.buf.ToArray());
 
@@ -129,6 +146,9 @@ namespace LowEntryNetworkCSharpTest
             Assert.AreEqual(G.Length, GG.Length);
             for (int i = 0; i < G.Length; i++)
                 Assert.AreEqual(G[i], GG[i]);
+            // Negative numbers get forced to 0 on Write.
+            Assert.AreEqual(br.GetPositiveInteger2(), 0);
+            Assert.AreEqual(br.GetPositiveInteger2(), 0);
             Assert.AreEqual(br.GetPositiveInteger2(), 42);
             Assert.AreEqual(br.GetPositiveInteger2(), 1025);
             Assert.AreEqual(br.GetPositiveInteger2(), 38000);
@@ -137,6 +157,8 @@ namespace LowEntryNetworkCSharpTest
             Assert.AreEqual(G.Length, GG.Length);
             for (int i = 0; i < G.Length; i++)
                 Assert.AreEqual(G[i], GG[i]);
+            Assert.AreEqual(br.GetPositiveInteger3(), 0);
+            Assert.AreEqual(br.GetPositiveInteger3(), 0);
             Assert.AreEqual(br.GetPositiveInteger3(), 42);
             Assert.AreEqual(br.GetPositiveInteger3(), 38000);
             Assert.AreEqual(br.GetPositiveInteger3(), 8388609);
